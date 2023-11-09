@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <style type="text/css">
+      #app {
+        border-style: dashed;
+        border-bottom: 1px solid #aaa;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        margin: 10px;
+      }
+
+      .tool {
+        display: flex;
+      }
+
+      .tool > * {
+        margin: 10px;
+        align-items: center;
+      }
+
+      .view {
+        display: flex;
+        height: 400px;
+      }
+
+      .status {
+        margin: 10px;
+      }
+      
+      #box {
+        flex: auto;
+        border: 1px solid #333;
+        border-radius: 5px;
+        margin: 10px;
+        overflow: auto;
+      }
+
+      #box > div {
+        border: 1px solid #999;
+        border-radius: 5px;
+        width: 150px;
+        height: 150px;
+        float: left;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      #box > div > * {
+        flex: auto;
+      }
+
+      #box > div > span {
+        width: 140px;
+        text-align: center;
+        font-size: 12px;
+      }
+
+      #box > div > img {
+        height: 80%;
+      }
+      #box > div > img:hover {
+        cursor: pointer;
+      }
+      #box > div.active {
+        background-color: #eee;
+      }
+
+      #detail {
+        flex: 0 0 200px;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        margin: 10px;
+        overflow: auto;
+      }
+
+      [draggable=true] {
+        cursor: grab;
+        
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module" src="./dist/index.js"></script>
+    <div v-scope="App({ })"  @vue:mounted="onMounted"></div>
+    <template id="page">
+      <div id="app" v-html="store.info"></div>
+      <div class="tool">
+        <button class="info" @click="info">空间信息</button>
+        <div>Location：<input type="text" readonly v-model:value="store.ctx.pwd" /></div>
+        <button class="list" @click="postMessage({action: 'list'})">刷新</button>
+        <button class="createFile" @click="createFile">新建文件</button>
+        <button class="createDirectory" @click="createDirectory">新建目录</button>
+        <button class="remove" @click="remove">删除该项</button>
+        <button class="clean" @click="clean">全部清空</button>
+        <button class="upload" @click="upload">上传文件</button>
+        <button class="saveAs" @click="saveAs">另存为</button>
+      </div>
+      <div class="view">
+        <div id="box">
+          <div v-for="item in store.items" :key="`${item.kind}:${item.name}`" :class="{active: !!item.active}" @drop="ondrop(item)" @dragover="ondragover">
+            <img alt="文件" src="./public/f.svg" v-if="item.kind == 'file'" @click="active(item)" @dblclick="read(item)" draggable="true" @dragstart="ondragstart(item)"/>
+            <img alt="文件夹" src="./public/d.svg" v-if="item.kind == 'directory'" @click="active(item)" @dblclick="cd(item)"/>
+            <input type="text" v-if="!!item.editable" :value="item.name" @keyup="editend(item, $event)"/>
+            <span v-else @dblclick="editable(item, $event)" >{{ item.name }}</span>
+          </div>
+          <div v-if="store.ctx.pwd != '/'">
+            <img alt="返回上层" src="./public/r.svg" @dblclick="cd({name: '..'})"/>
+            <span>返回上层</span>
+          </div>
+        </div>
+        <div id="detail">{{ store.detail }}</div>
+      </div>
+      <div class="status">{{ store.error }}</div>
+    </template>
+  </body>
+</html>
