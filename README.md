@@ -178,7 +178,7 @@
 
 ## 代码
 
-[opfs-storage](https://github.com/tsdk/opfs-storage) 克隆后直接运行
+[项目](https://github.com/tsdk/opfs-storage) fork后直接运行
 
 ```bash
 > npx serve .
