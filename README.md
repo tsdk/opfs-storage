@@ -62,7 +62,12 @@
 
 ## 功能示例
 
-### 授权
+
+### 界面
+
+![Snip20231110_2.png](https://s2.loli.net/2023/11/10/RzwT1QjIVHJyZMv.png)
+
+### 按需授权
 
 ![Snip20231108_21.png](https://s2.loli.net/2023/11/08/vLh8ybxR4QkqGXT.png)
 
@@ -173,9 +178,8 @@
 
 ## 代码
 
-[opfs-storage]()
+[opfs-storage](https://github.com/tsdk/opfs-storage) 克隆后直接运行
 
-克隆后直接运行
-
+```bash
 > npx serve .
-
+```
